@@ -1,0 +1,444 @@
+--// RELAX PRO DASHBOARD V7.2 - OFFICIAL GITHUB SOURCE
+--// NOTICE: DO NOT EDIT THE VISUAL WATERMARK STRINGS OR THE COMPILER WILL COLD-CRASH.
+--// CREDITS: Dev By anjaszrelaxz
+
+local expected_dev = "anjaszrelaxz"
+
+--// BAGIAN UTAMA: SOURCE CODE UI DAN ENGINE SPAM
+local raw_source = [=[
+local Players = game:GetService("Players")
+local UIS = game:GetService("UserInputService")
+local RS = game:GetService("RunService")
+local TweenService = game:GetService("TweenService")
+
+local plr = Players.LocalPlayer
+local pgui = plr:WaitForChild("PlayerGui")
+
+--// CLEANUP INSTANCE SEBELUMNYA
+if pgui:FindFirstChild("RELAX_PREMIUM_V7_2") then
+	pgui.RELAX_PREMIUM_V7_2:Destroy()
+end
+
+--// ROOT GUI
+local gui = Instance.new("ScreenGui")
+gui.Name = "RELAX_PREMIUM_V7_2"
+gui.ResetOnSpawn = false
+gui.Parent = pgui
+
+--// AUTO-SCALE FLOATING ICON
+local toggleIcon = Instance.new("ImageButton")
+toggleIcon.Size = UDim2.new(0, 48, 0, 48)
+toggleIcon.Position = UDim2.new(0, 15, 0.45, 0)
+toggleIcon.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+toggleIcon.Image = "rbxassetid://10747374131"
+toggleIcon.ImageColor3 = Color3.fromRGB(255, 60, 60)
+toggleIcon.Parent = gui
+
+local iconAspect = Instance.new("UIAspectRatioConstraint", toggleIcon)
+iconAspect.AspectRatio = 1
+
+local toggleStroke = Instance.new("UIStroke", toggleIcon)
+toggleStroke.Color = Color3.fromRGB(255, 60, 60)
+toggleStroke.Thickness = 1.5
+Instance.new("UICorner", toggleIcon).CornerRadius = UDim.new(0, 10)
+
+--// WINDOW UTAMA
+local main = Instance.new("Frame")
+main.AnchorPoint = Vector2.new(0.5, 0.5)
+main.Position = UDim2.new(0.5, 0, 0.5, 0)
+main.Size = UDim2.new(0.85, 0, 0.8, 0)
+main.BackgroundColor3 = Color3.fromRGB(15, 16, 22)
+main.BorderSizePixel = 0
+main.Active = true
+main.Draggable = true
+main.Visible = true -- Langsung muncul saat loadstring berhasil
+main.Parent = gui
+
+local mainSizeLimit = Instance.new("UISizeConstraint", main)
+mainSizeLimit.MaxSize = Vector2.new(580, 430)
+mainSizeLimit.MinSize = Vector2.new(290, 320)
+
+Instance.new("UICorner", main).CornerRadius = UDim.new(0, 14)
+local mainStroke = Instance.new("UIStroke", main)
+mainStroke.Color = Color3.fromRGB(40, 42, 54)
+mainStroke.Thickness = 1
+
+local gradient = Instance.new("UIGradient", main)
+gradient.Color = ColorSequence.new({
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(22, 24, 32)),
+	ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 13))
+})
+gradient.Rotation = 45
+
+--// TITLE BAR HEADER
+local titleBar = Instance.new("Frame", main)
+titleBar.Size = UDim2.new(1, 0, 0.12, 0)
+titleBar.BackgroundTransparency = 1
+
+local titleText = Instance.new("TextLabel", titleBar)
+titleText.Size = UDim2.new(0.4, 0, 0.6, 0)
+titleText.Position = UDim2.new(0, 16, 0.15, 0)
+titleText.BackgroundTransparency = 1
+titleText.Text = "🎯 SELECT REMOTES"
+titleText.TextColor3 = Color3.fromRGB(240, 240, 245)
+titleText.Font = Enum.Font.GothamBold
+titleText.TextSize = 15
+titleText.TextXAlignment = Enum.TextXAlignment.Left
+
+--// BANNER WATERMARK PERMANEN (FIX FRAME)
+local devLabel = Instance.new("TextLabel", titleBar)
+devLabel.Size = UDim2.new(0.4, -20, 0.5, 0)
+devLabel.Position = UDim2.new(0.6, -45, 0.2, 0)
+devLabel.BackgroundTransparency = 1
+devLabel.Text = "⚡ Dev By anjaszrelaxz"
+devLabel.TextColor3 = Color3.fromRGB(255, 180, 50)
+devLabel.Font = Enum.Font.FredokaOne
+devLabel.TextScaled = true
+devLabel.TextXAlignment = Enum.TextXAlignment.Right
+devLabel.TextYAlignment = Enum.TextYAlignment.Center
+
+local devTextLimit = Instance.new("UITextSizeConstraint", devLabel)
+devTextLimit.MaxTextSize = 13
+devTextLimit.MinTextSize = 8
+
+local subText = Instance.new("TextLabel", titleBar)
+subText.Size = UDim2.new(0.7, 0, 0.4, 0)
+subText.Position = UDim2.new(0, 16, 0.65, 0)
+subText.BackgroundTransparency = 1
+subText.Text = "Choose targets to trigger parameters & test limits"
+subText.TextColor3 = Color3.fromRGB(120, 125, 140)
+subText.Font = Enum.Font.Gotham
+subText.TextSize = 10
+subText.TextXAlignment = Enum.TextXAlignment.Left
+
+local closeBtn = Instance.new("TextButton", titleBar)
+closeBtn.Size = UDim2.new(0.08, 0, 0.6, 0)
+closeBtn.Position = UDim2.new(1, -40, 0.2, 0)
+closeBtn.BackgroundColor3 = Color3.fromRGB(220, 50, 50)
+closeBtn.Text = "✕"
+closeBtn.TextColor3 = Color3.new(1,1,1)
+closeBtn.Font = Enum.Font.GothamBold
+closeBtn.TextSize = 12
+Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 6)
+
+local closeAspect = Instance.new("UIAspectRatioConstraint", closeBtn)
+closeAspect.AspectRatio = 1
+
+--// SEARCH CONTAINER
+local searchFrame = Instance.new("Frame", main)
+searchFrame.Size = UDim2.new(1, -32, 0.09, 0)
+searchFrame.Position = UDim2.new(0, 16, 0.14, 0)
+searchFrame.BackgroundColor3 = Color3.fromRGB(24, 26, 36)
+Instance.new("UICorner", searchFrame).CornerRadius = UDim.new(0, 8)
+
+local searchIcon = Instance.new("TextLabel", searchFrame)
+searchIcon.Size = UDim2.new(0.08, 0, 1, 0)
+searchIcon.BackgroundTransparency = 1
+searchIcon.Text = "🔍"
+searchIcon.TextSize = 12
+searchIcon.TextColor3 = Color3.fromRGB(120, 125, 140)
+
+local searchBox = Instance.new("TextBox", searchFrame)
+searchBox.Size = UDim2.new(0.9, 0, 1, 0)
+searchBox.Position = UDim2.new(0.09, 0, 0, 0)
+searchBox.BackgroundTransparency = 1
+searchBox.PlaceholderText = "Search remote by name..."
+searchBox.PlaceholderColor3 = Color3.fromRGB(80, 85, 100)
+searchBox.Text = ""
+searchBox.TextColor3 = Color3.fromRGB(240, 240, 240)
+searchBox.Font = Enum.Font.Gotham
+searchBox.TextSize = 12
+searchBox.TextXAlignment = Enum.TextXAlignment.Left
+
+--// BULK ACTION MACRO BUTTONS
+local btnSelectAll = Instance.new("TextButton", main)
+btnSelectAll.Size = UDim2.new(0.46, 0, 0.09, 0)
+btnSelectAll.Position = UDim2.new(0, 16, 0.25, 0)
+btnSelectAll.BackgroundColor3 = Color3.fromRGB(0, 175, 95)
+btnSelectAll.Text = "✓ SELECT ALL"
+btnSelectAll.TextColor3 = Color3.new(1,1,1)
+btnSelectAll.Font = Enum.Font.GothamBold
+btnSelectAll.TextSize = 12
+Instance.new("UICorner", btnSelectAll).CornerRadius = UDim.new(0, 8)
+
+local btnUnselectAll = Instance.new("TextButton", main)
+btnUnselectAll.Size = UDim2.new(0.46, 0, 0.09, 0)
+btnUnselectAll.Position = UDim2.new(0.54, 0, 0.25, 0)
+btnUnselectAll.BackgroundColor3 = Color3.fromRGB(205, 65, 65)
+btnUnselectAll.Text = "❑ UNSELECT ALL"
+btnUnselectAll.TextColor3 = Color3.new(1,1,1)
+btnUnselectAll.Font = Enum.Font.GothamBold
+btnUnselectAll.TextSize = 12
+Instance.new("UICorner", btnUnselectAll).CornerRadius = UDim.new(0, 8)
+
+--// LIST CONTAINER AREA
+local listScroll = Instance.new("ScrollingFrame", main)
+listScroll.Size = UDim2.new(1, -32, 0.45, 0)
+listScroll.Position = UDim2.new(0, 16, 0.36, 0)
+listScroll.BackgroundColor3 = Color3.fromRGB(18, 19, 26)
+listScroll.BackgroundTransparency = 0.4
+listScroll.ScrollBarThickness = 4
+listScroll.ScrollBarImageColor3 = Color3.fromRGB(60, 65, 85)
+listScroll.AutomaticCanvasSize = Enum.AutomaticSize.Y
+listScroll.CanvasSize = UDim2.new(0, 0, 0, 0)
+Instance.new("UICorner", listScroll).CornerRadius = UDim.new(0, 8)
+
+local listLayout = Instance.new("UIListLayout", listScroll)
+listLayout.Padding = UDim.new(0, 5)
+
+--// FOOTER CONTROL COMPONENT
+local footer = Instance.new("Frame", main)
+footer.Size = UDim2.new(1, -32, 0.12, 0)
+footer.Position = UDim2.new(0, 16, 0.84, 0)
+footer.BackgroundColor3 = Color3.fromRGB(22, 23, 33)
+Instance.new("UICorner", footer).CornerRadius = UDim.new(0, 8)
+
+local footerTitle = Instance.new("TextLabel", footer)
+footerTitle.Size = UDim2.new(0.3, 0, 1, 0)
+footerTitle.Position = UDim2.new(0, 12, 0, 0)
+footerTitle.BackgroundTransparency = 1
+footerTitle.Text = "⚡ CONTROL"
+footerTitle.TextColor3 = Color3.fromRGB(255, 75, 75)
+footerTitle.Font = Enum.Font.GothamBold
+footerTitle.TextSize = 12
+footerTitle.TextXAlignment = Enum.TextXAlignment.Left
+
+local limitBox = Instance.new("TextBox", footer)
+limitBox.Size = UDim2.new(0.2, 0, 0.6, 0)
+limitBox.Position = UDim2.new(0.32, 0, 0.2, 0)
+limitBox.BackgroundColor3 = Color3.fromRGB(32, 35, 48)
+limitBox.Text = "100"
+limitBox.PlaceholderText = "Limit (0=inf)"
+limitBox.TextColor3 = Color3.new(1,1,1)
+limitBox.Font = Enum.Font.Code
+limitBox.TextSize = 11
+Instance.new("UICorner", limitBox).CornerRadius = UDim.new(0, 6)
+
+local actionBtn = Instance.new("TextButton", footer)
+actionBtn.Size = UDim2.new(0.4, 0, 0.65, 0)
+actionBtn.Position = UDim2.new(1, -12, 0.5, -14)
+actionBtn.AnchorPoint = Vector2.new(1, 0)
+actionBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
+actionBtn.Text = "EXECUTE TEST"
+actionBtn.TextColor3 = Color3.fromRGB(15, 15, 20)
+actionBtn.Font = Enum.Font.GothamBold
+actionBtn.TextSize = 11
+Instance.new("UICorner", actionBtn).CornerRadius = UDim.new(0, 6)
+
+
+--// REGISTER DATA & LOGIC CONTROL
+local targetRemotes = {}
+local selectedRemotes = {}
+local itemUiObjects = {}
+local itemToggleCallbacks = {}
+
+local function createRemoteItem(remote)
+	if itemUiObjects[remote] then return end
+
+	local item = Instance.new("Frame")
+	item.Size = UDim2.new(1, -6, 0, 46)
+	item.BackgroundColor3 = Color3.fromRGB(28, 30, 41)
+	Instance.new("UICorner", item).CornerRadius = UDim.new(0, 6)
+	item.Parent = listScroll
+
+	local checkbox = Instance.new("TextButton", item)
+	checkbox.Size = UDim2.new(0, 22, 0, 22)
+	checkbox.Position = UDim2.new(0, 10, 0.5, -11)
+	checkbox.BackgroundColor3 = Color3.fromRGB(43, 48, 65)
+	checkbox.Text = ""
+	checkbox.TextColor3 = Color3.new(1,1,1)
+	checkbox.Font = Enum.Font.GothamBold
+	checkbox.TextSize = 11
+	Instance.new("UICorner", checkbox).CornerRadius = UDim.new(0, 5)
+
+	local rName = Instance.new("TextLabel", item)
+	rName.Size = UDim2.new(0.85, -45, 0.45, 0)
+	rName.Position = UDim2.new(0, 42, 0.1, 0)
+	rName.BackgroundTransparency = 1
+	rName.Text = remote.Name == "" and "(NoNameRemote)" or remote.Name
+	rName.TextColor3 = Color3.fromRGB(230, 235, 245)
+	rName.Font = Enum.Font.GothamBold
+	rName.TextSize = 12
+	rName.TextXAlignment = Enum.TextXAlignment.Left
+
+	local rPath = Instance.new("TextLabel", item)
+	rPath.Size = UDim2.new(0.85, -45, 0.4, 0)
+	rPath.Position = UDim2.new(0, 42, 0.5, 0)
+	rPath.BackgroundTransparency = 1
+	rPath.Text = remote:GetFullName()
+	rPath.TextColor3 = Color3.fromRGB(110, 115, 130)
+	rPath.Font = Enum.Font.Code
+	rPath.TextSize = 9
+	rPath.TextXAlignment = Enum.TextXAlignment.Left
+
+	table.insert(targetRemotes, remote)
+	selectedRemotes[remote] = false
+	itemUiObjects[remote] = item
+
+	local function updateVisual(forceState)
+		if forceState ~= nil then
+			selectedRemotes[remote] = forceState
+		end
+		
+		if selectedRemotes[remote] then
+			checkbox.BackgroundColor3 = Color3.fromRGB(0, 175, 95)
+			checkbox.Text = "✓"
+			item.BackgroundColor3 = Color3.fromRGB(30, 44, 38)
+		else
+			checkbox.BackgroundColor3 = Color3.fromRGB(43, 48, 65)
+			checkbox.Text = ""
+			item.BackgroundColor3 = Color3.fromRGB(28, 30, 41)
+		end
+	end
+
+	checkbox.MouseButton1Click:Connect(function()
+		selectedRemotes[remote] = not selectedRemotes[remote]
+		updateVisual()
+	end)
+
+	itemToggleCallbacks[remote] = updateVisual
+end
+
+--// REFRESH ENGINE JALUR LUAR
+local function scanAllExistingRemotes()
+	for _, v in pairs(game:GetDescendants()) do
+		if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
+			pcall(createRemoteItem, v)
+		end
+	end
+end
+scanAllExistingRemotes()
+
+game.DescendantAdded:Connect(function(v)
+	if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
+		task.wait(0.1)
+		pcall(createRemoteItem, v)
+	end
+end)
+
+--// MASS SELECTION
+btnSelectAll.MouseButton1Click:Connect(function()
+	for remote, item in pairs(itemUiObjects) do
+		if item.Visible and itemToggleCallbacks[remote] then
+			itemToggleCallbacks[remote](true)
+		end
+	end
+end)
+
+btnUnselectAll.MouseButton1Click:Connect(function()
+	for remote, item in pairs(itemUiObjects) do
+		if itemToggleCallbacks[remote] then
+			itemToggleCallbacks[remote](false)
+		end
+	end
+end)
+
+--// SEARCH FILTER
+searchBox:GetPropertyChangedSignal("Text"):Connect(function()
+	local query = searchBox.Text:lower()
+	for remote, item in pairs(itemUiObjects) do
+		if query == "" or remote.Name:lower():find(query) or remote:GetFullName():lower():find(query) then
+			item.Visible = true
+		else
+			item.Visible = false
+		end
+	end
+end)
+
+--// BRUTAL TESTING RUNNER
+local brutalThreadActive = false
+actionBtn.MouseButton1Click:Connect(function()
+	if brutalThreadActive then
+		brutalThreadActive = false
+		actionBtn.Text = "EXECUTE TEST"
+		actionBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
+		return
+	end
+
+	local txt = limitBox.Text:lower()
+	local countLimit = tonumber(txt) or 100
+	local isInfinite = (countLimit == 0 or txt == "inf" or txt == "infinite")
+	
+	local activeQueue = {}
+	for remote, isSelected in pairs(selectedRemotes) do
+		if isSelected and remote:IsA("RemoteEvent") then
+			table.insert(activeQueue, remote)
+		end
+	end
+
+	if #activeQueue == 0 then
+		actionBtn.Text = "NO SELECTION"
+		task.wait(0.8)
+		actionBtn.Text = "EXECUTE TEST"
+		return
+	end
+
+	brutalThreadActive = true
+	actionBtn.Text = "🛑 STOP TEST"
+	actionBtn.BackgroundColor3 = Color3.fromRGB(225, 55, 55)
+
+	task.spawn(function()
+		local iteration = 0
+		while brutalThreadActive do
+			if not isInfinite and iteration >= countLimit then break end
+			
+			for i = 1, #activeQueue do
+				local targetRemote = activeQueue[i]
+				task.spawn(function()
+					targetRemote:FireServer(true, "RELAX_BRUTAL_STRESS_DATA", tick())
+				end)
+			end
+			
+			iteration = iteration + 1
+			task.wait()
+		end
+		brutalThreadActive = false
+		actionBtn.Text = "EXECUTE TEST"
+		actionBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
+	end)
+end)
+
+--// TOGGLE INTERFACE
+local function toggleUI()
+	main.Visible = not main.Visible
+end
+
+toggleIcon.MouseButton1Click:Connect(toggleUI)
+closeBtn.MouseButton1Connect:Connect(toggleUI)
+
+UIS.InputBegan:Connect(function(input, gp)
+	if gp then return end
+	if input.KeyCode == Enum.KeyCode.RightShift then
+		toggleUI()
+	end
+end)
+
+--// PROTECTION ANTI ALTER IN RUNTIME
+task.spawn(function()
+	while task.wait(0.8) do
+		if not devLabel or devLabel.Text ~= "⚡ Dev By anjaszrelaxz" then
+			gui:Destroy()
+			break
+		end
+	end
+end)
+]=]
+
+--// ==========================================
+--// SECURITY SYSTEM: ANTI-THEFT BYPASS CHECK
+--// ==========================================
+local script_content = debug.info(1, "s") or ""
+local current_credits = [[Dev By anjaszrelaxz]]
+
+-- Validasi string utama penentu hak cipta
+if not string.find(string.lower(current_credits), string.lower(expected_dev)) then
+    -- Jebakan: Cetak pesan eror tiruan server di konsol F9
+    game:GetService("TestService"):Message("⚠️ [Error]: Failed to establish handshake with GitHub core cluster. Repository component 'relax_v7' dropped.")
+    error("404: Script Component Not Found or Deprecated.")
+    return
+else
+    -- Jika semuanya aman, jalankan muatan aslinya
+    local compiled_payload = assert(loadstring(raw_source))
+    compiled_payload()
+end
+
